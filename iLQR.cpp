@@ -223,9 +223,9 @@ vector<Vector2d> iLQR::update(double X, double Y, double yaw, vector<Vector2d> u
             if (diverge == true)
             {
                 cout << "Cholesky failed" << endl;
-                if( lambda * lambdaFactor >= lambdaFactor )
+                if( dlambda * lambdaFactor >= lambdaFactor )
                 {   
-                    dlambda = lambda*lambdaFactor;
+                    dlambda = dlambda*lambdaFactor;
                 }
                 else
                 {
@@ -285,6 +285,10 @@ vector<Vector2d> iLQR::update(double X, double Y, double yaw, vector<Vector2d> u
             {
                 lambda = lambda*dlambda;
             }
+            else
+            {
+                lambda = 0;
+            }
             cout << "SUCCEESS: gradient norm < tolGrad" << endl;
             break;
         }
@@ -339,9 +343,9 @@ vector<Vector2d> iLQR::update(double X, double Y, double yaw, vector<Vector2d> u
         if (fwdPassDone)
         {
             // decrese lambda
-            if( lambda / lambdaFactor <= 1 / lambdaFactor )
+            if( dlambda / lambdaFactor <= 1 / lambdaFactor )
             {   
-                dlambda = lambda / lambdaFactor;
+                dlambda = dlambda / lambdaFactor;
             }
             else
             {
@@ -350,6 +354,10 @@ vector<Vector2d> iLQR::update(double X, double Y, double yaw, vector<Vector2d> u
             if ( lambda  > lambdaMin )
             {
                 lambda = lambda*dlambda;
+            }
+            else
+            {
+                lambda = 0;
             }
             // accept changes
             u = unew;
@@ -366,9 +374,9 @@ vector<Vector2d> iLQR::update(double X, double Y, double yaw, vector<Vector2d> u
         else // no cost improvement
         {
             // increse lambda
-            if( lambda * lambdaFactor >= lambdaFactor )
+            if( dlambda * lambdaFactor >= lambdaFactor )
             {   
-                dlambda = lambda*lambdaFactor;
+                dlambda = dlambda*lambdaFactor;
             }
             else
             {
